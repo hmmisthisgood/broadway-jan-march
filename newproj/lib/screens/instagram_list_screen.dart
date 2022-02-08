@@ -8,6 +8,7 @@ class InstagramListScreen extends StatelessWidget {
       "https://www.bkacontent.com/wp-content/uploads/2020/10/Depositphotos_336730000_l-2015.jpg";
   final postImage =
       "https://cdn.pixabay.com/photo/2021/11/06/16/11/greece-6773683_960_720.jpg";
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,31 +86,7 @@ class InstagramListScreen extends StatelessWidget {
           )
         ],
       ),
-      body:
-
-          //  Column(
-          //   children: [
-          //     // Container(
-          //     //   child: Stack(
-          //     //     children: [
-          //     //       Container(
-          //     //         height: 500,
-          //     //         // width: 200,
-          //     //         color: Colors.black.withOpacity(0.8),
-          //     //       ),
-          //     //       Container(
-          //     //         color: Colors.red,
-          //     //         height: 500,
-          //     //         child: Image.network(postImage),
-          //     //       ),
-          //     //       Positioned(top: 10, child: Icon(Icons.home, size: 45)),
-          //     //     ],
-          //     //   ),
-          //     // )
-          //   ],
-          // )
-
-          ListView(
+      body: ListView(
         children: [
           CommonPostWidget(userImage: userImage, postImage: postImage),
           CommonPostWidget(userImage: userImage, postImage: postImage),
