@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'screens/instagram_list_screen.dart';
+import 'package:newproj/screens/tik_tok_screen.dart';
 
 main() {
   runApp(App());
@@ -14,7 +13,7 @@ class App extends StatelessWidget {
           // primaryColor: Colors.purple,
           primarySwatch: Colors.purple,
           textTheme: TextTheme()),
-      home: InstagramListScreen(),
+      home: TikTokScreen(),
       title: "Our app",
     );
   }
