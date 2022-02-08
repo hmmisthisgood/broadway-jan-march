@@ -75,13 +75,13 @@ class HomePageState extends State<HomePage> {
 
     print("Finally fetching data from server await code");
 
-    isFetchingData = true;
-    setState(() {});
     Map postMap = {};
 
     // json.decode("");
 
     try {
+      isFetchingData = true;
+      setState(() {});
       final response = await Dio().get(url);
 
       print("The request to server might be complated already");
@@ -94,7 +94,6 @@ class HomePageState extends State<HomePage> {
       dataFromServer = temporaryData;
 
       isFetchingData = false;
-      // print(dataFromServer);
       setState(() {});
     } on DioError catch (e) {
       print(e);
