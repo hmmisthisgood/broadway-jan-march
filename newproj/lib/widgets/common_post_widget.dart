@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:newproj/navigation/routes.dart';
 
 class CommonPostWidget extends StatelessWidget {
   const CommonPostWidget(
@@ -12,7 +13,7 @@ class CommonPostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,16 +25,37 @@ class CommonPostWidget extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Container(
-                        height: 45,
-                        width: 45,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
+                    InkWell(
+                      onTap: () {
+                        /// 1.
+                        // Navigator.of(context).push(
+                        //   CupertinoPageRoute(
+                        //     builder: (context) => ProfieScreen(),
+                        //   ),
+                        // );
+
+                        /// 2.
+                        // Navigator.push(
+                        //   context,
+                        //   CupertinoPageRoute(
+                        //     builder: (context) => ProfieScreen(),
+                        //   ),
+                        // );
+
+                        ///3. named navigation
+                        Navigator.pushNamed(context, Routes.profileRoute);
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Container(
+                          height: 45,
+                          width: 45,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green,
+                          ),
+                          child: Image.network(userImage, fit: BoxFit.cover),
                         ),
-                        child: Image.network(userImage, fit: BoxFit.cover),
                       ),
                     ),
                     SizedBox(width: 10),
