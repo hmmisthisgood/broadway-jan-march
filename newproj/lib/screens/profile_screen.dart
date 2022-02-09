@@ -14,7 +14,7 @@ class _ProfieScreenState extends State<ProfieScreen>
       "https://cdn.pixabay.com/photo/2021/11/06/16/11/greece-6773683_960_720.jpg";
 
   final Color customGreen = Color(0xff88A858);
-var color=Colors.green;
+  var color = Colors.green;
 
   late TabController tabController;
 
@@ -47,6 +47,15 @@ var color=Colors.green;
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: customGreen,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           title: Text(
             "My username",
             style: TextStyle(color: customGreen),
