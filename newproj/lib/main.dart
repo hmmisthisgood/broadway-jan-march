@@ -20,7 +20,7 @@ class App extends StatelessWidget {
       //   customRouteGenerator(settings);
       // },
       onGenerateRoute: customRouteGenerator,
-      initialRoute: Routes.profileRoute,
+      initialRoute: Routes.loginRoute,
     );
   }
 }
