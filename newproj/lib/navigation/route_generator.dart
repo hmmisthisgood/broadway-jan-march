@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newproj/screens/login_screen.dart';
 import 'package:newproj/screens/profile_screen.dart';
+import 'package:newproj/screens/tik_tok_screen.dart';
 
 import 'routes.dart';
 
@@ -12,7 +13,7 @@ Route customRouteGenerator(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => LoginScreen());
 
     case Routes.homeRoute:
-      return MaterialPageRoute(builder: (context) => ProfieScreen());
+      return MaterialPageRoute(builder: (context) => TikTokScreen());
 
     case Routes.settingsRoute:
       return MaterialPageRoute(builder: (context) => ProfieScreen());
