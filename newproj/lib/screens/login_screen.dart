@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newproj/navigation/routes.dart';
+import 'package:newproj/util/shared_pref.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -162,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   minWidth: 200,
-                  onPressed: () {
+                  onPressed: () async {
                     // emailController.text;
 
                     if (formKey.currentState != null) {
@@ -170,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       bool isValidated = formKey.currentState!.validate();
 
                       if (isValidated) {
+                        SharedPref.setUserLoggedInStatus(true);
                         Navigator.pushNamed(context, Routes.homeRoute);
                       }
                     }
