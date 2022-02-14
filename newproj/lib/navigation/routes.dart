@@ -1,4 +1,5 @@
 class Routes {
+  static const String index = "/";
   static const String profileRoute = "/profieagwseaweglee";
   static const String settingsRoute = "/settings";
   static const String homeRoute = "/home";
