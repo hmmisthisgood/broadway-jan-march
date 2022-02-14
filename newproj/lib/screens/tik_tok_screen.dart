@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newproj/screens/profile_screen.dart';
+import 'package:newproj/util/shared_pref.dart';
 
 import 'home_page.dart';
 import 'instagram_list_screen.dart';
@@ -60,6 +61,7 @@ class _TikTokScreenState extends State<TikTokScreen> {
           onTap: (index) {
             pageController.jumpToPage(index);
             thisIsTheCurrentIndex = index;
+            SharedPref.logout();
             setState(() {});
           },
           items: List.generate(bottomItems.length, (index) {
