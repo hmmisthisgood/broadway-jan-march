@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import "package:logger/logger.dart";
+import 'package:sqliteapp/util/db_service.dart';
 
 import 'model/note.dart';
 
@@ -15,13 +18,12 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  late Database ourDatabase;
-
   final titleController = TextEditingController();
   final desController = TextEditingController();
   final logger = Logger();
 
-  List<Map<String, dynamic>> myNotes = [];
+  // List<Map<String, dynamic>> myNotes = [];
+
   List<Note> myNotesNotes = [];
   List users = [];
 
@@ -29,7 +31,6 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     checkPathsAndPrint();
-    initAndOpenDatabase();
   }
 
   // singleton class in dart
@@ -42,141 +43,8 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  static const USER_ID = 'id';
-  static const User_Table = "users";
-
-  initAndOpenDatabase() async {
-    final docsDir = await getTemporaryDirectory();
-
-    final databseName = "our_test_database.db";
-
-    ///data/users/0/com.something/app/our_test_databse.db
-
-    /// data/Android/data/com.something/
-    ///
-    final databsePath = "${docsDir!.path}/$databseName";
-    final int databaseVersion = 1;
-
-    final database = await openDatabase(
-      databsePath,
-      version: databaseVersion,
-      onConfigure: (db) async {
-        print("on congigure called: ");
-        try {
-          await db.execute('''    
-      CREATE TABLE IF NOT EXISTS $User_Table(
-      Id INTEGER NOT NUll PRIMARY KEY AUTOINCREMENT,
-      Fullname VARCHAR(50),
-      DataOfBirth VARCHAR,
-      Role VARCHAR, 
-      Bio TEXT
-      );
-      ''');
-
-          await db.execute('''
-        CREATE TABLE IF NOT EXISTS notes(
-        Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        Title VARCHAR(100),
-        Description TEXT,
-        CreateAt VARCHAR,
-        UpatedAt VARCHAR
-);
-    ''');
-        } on DatabaseException catch (e) {
-          print(e.toString());
-        }
-
-        // ourDatabase = db;
-      },
-      onCreate: (db, version) async {
-        // CRUd
-        // create = db.insert/ db.rawInsert
-        // read = db.query, db.rawQuery
-        // update= db.update ,db.rawUpdate
-        // delete= db.delete, db.rawDelete
-
-        /// table creation
-        ///  db.execute
-        ///
-
-//         print("on create called  with version: $version");
-
-//         try {
-//           await db.execute('''
-//       CREATE TABLE IF NOT EXISTS $User_Table(
-//       Id INTEGER NOT NUll PRIMARY KEY AUTOINCREMENT,
-//       Fullname VARCHAR(50),
-//       DataOfBirth VARCHAR,
-//       Role VARCHAR,
-//       Bio TEXT
-//       );
-//       ''');
-
-//           await db.execute('''
-//         CREATE TABLE IF NOT EXISTS notes(
-//         Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-//         Title VARCHAR(100),
-//         Description TEXT
-//         CreateAt VARCHAR,
-//         UpatedAt VARCHAR
-// );
-//     ''');
-//         } on DatabaseException catch (e) {
-//           print(e.toString());
-//         }
-      },
-      onUpgrade: (db, oldVer, newVer) {
-        print("on upgrade called with version: $oldVer new Version: $newVer");
-
-        ///
-        ///
-        ///
-
-        ////
-        ///
-        ///
-        ///
-        ///
-        ///
-      },
-      onDowngrade: (db, oldVer, newVer) {
-        print("on downgrade called with version: $oldVer new Version: $newVer");
-      },
-      onOpen: (db) {},
-    );
-
-    ourDatabase = database;
-  }
-
   createUserInDatabse() async {
-    print("adding a new user ");
-    try {
-      await ourDatabase.insert(User_Table, {
-        "Fullname": "this is my fullname",
-        "DataOfBirth": "2020-10-10",
-        "Role": "Admin",
-        "Bio": "I am a programmer"
-      });
-    } catch (e) {
-      logger.e(e);
-    }
-  }
-
-  getUsers() async {
-    try {
-      /// using ! (asert) this way is bad
-      // await ourDatabase!.query(User_Table);
-
-      /// this is a good way to user ! for not null assertion
-      // if (ourDatabase != null) {
-      //   await ourDatabase!.query(User_Table);
-      // }
-
-      final data = await ourDatabase.rawQuery('''SELECT * FROM $User_Table ''');
-      print(data);
-    } catch (e) {
-      logger.e(e);
-    }
+    await DBService.instance.createUserInDatabse();
   }
 
   saveNote() async {
@@ -188,31 +56,27 @@ class _HomepageState extends State<Homepage> {
     var intValue = int.parse(value); // 1
     var doubleValue = double.parse(value); //1.0
 
-    await ourDatabase.insert("notes", {
-      "Title": titleController.text,
-      "Description": desController.text,
-      // "CreateAt": currentTime.toString()
-    });
+    var result = await DBService.instance.saveNote(
+      title: titleController.text,
+      description: desController.text,
+    );
+    print(result);
   }
 
   getNotes() async {
-    final notesList = await ourDatabase.query("notes");
-    // List.generate();
+    final notesList = await DBService.instance.getNotes();
 
-    /// Note = Map<String, Object>
-    myNotes = notesList;
+    // final tempNotesList = notesList.map((noteItem) {
+    //   /// modify each item in the list
+    //   /// and return the modified values in a brand new
+    //   final convertedNote = Note.convertMapToNote(noteItem);
+    //   return convertedNote;
+    // }).toList();
 
-    final tempNotesList = notesList.map((noteItem) {
-      /// modify each item in the list
-      /// and return the modified values in a brand new
-      final convertedNote = Note.convertMapToNote(noteItem);
-      return convertedNote;
-    }).toList();
-
-    myNotesNotes = tempNotesList;
+    myNotesNotes = notesList;
 
     setState(() {});
-    logger.d(myNotes);
+    // logger.d(myNotes);
   }
 
   @override
@@ -229,16 +93,16 @@ class _HomepageState extends State<Homepage> {
                   onPressed: () {
                     createUserInDatabse();
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.person_add,
                     size: 50,
                     color: Colors.green,
                   )),
               IconButton(
                   onPressed: () {
-                    getUsers();
+                    DBService.instance.getUsers();
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.list,
                     size: 50,
                   )),
@@ -274,9 +138,10 @@ class _HomepageState extends State<Homepage> {
                       // itemCount: myNotes.length,
 
                       children: List.generate(
-                        myNotes.length,
+                        myNotesNotes.length,
                         (index) {
-                          final note = myNotes[index];
+                          // final note = myNotes[index];
+
                           final actualNote = myNotesNotes[index];
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
