@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http_adv/util/home_page_with_cubit.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http_adv/bloc/photos_bloc.dart';
+import 'package:http_adv/home_page_with_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +12,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomepageWithCubit(),
+    return BlocProvider(
+      create: (context) => PhotosCubit(),
+      child: MaterialApp(
+        home: HomepageWithCubit(
+          title: "press me",
+        ),
+      ),
     );
   }
 }

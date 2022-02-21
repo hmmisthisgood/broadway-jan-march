@@ -1,5 +1,6 @@
 abstract class PhotosState {}
 
+
 // initial state
 
 class InitialState extends PhotosState {}
@@ -10,6 +11,7 @@ class LoadingState extends PhotosState {}
 // error state
 class ErrorState extends PhotosState {
   final String errorMessage;
+  
   ErrorState({required this.errorMessage});
 }
 

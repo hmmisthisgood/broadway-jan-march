@@ -8,9 +8,13 @@ import 'package:http_adv/util/constants.dart';
 import 'package:http/http.dart' as apiClient;
 import 'package:logger/logger.dart';
 
+// bloc/cubit
+
 class PhotosCubit extends Cubit<PhotosState> {
   PhotosCubit() : super(InitialState());
+
   final logger = Logger();
+
   deletePost() {}
   updatePost() {}
 
@@ -32,6 +36,7 @@ class PhotosCubit extends Cubit<PhotosState> {
       final body = response.body;
 
       final decodedJson = json.decode(body);
+
       emit(SuccessState(data: body));
     } catch (e) {
       // logger.e(e);
@@ -40,3 +45,9 @@ class PhotosCubit extends Cubit<PhotosState> {
     }
   }
 }
+
+// class PhotosCubit extends Cubit<PhotosState> {
+//   PhotosCubit() : super(new InitialState());
+
+
+// }
