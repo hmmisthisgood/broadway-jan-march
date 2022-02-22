@@ -4,6 +4,7 @@ import 'package:http_adv/bloc/photos_bloc.dart';
 import 'package:http_adv/bloc/photos_state.dart';
 import 'package:logger/logger.dart';
 
+import 'widgets/photos_listview_widget.dart';
 import 'widgets/some_button.dart';
 
 class HomepageWithCubit extends StatefulWidget {
@@ -33,49 +34,43 @@ class _HomepageWithCubitState extends State<HomepageWithCubit> {
 
     return Scaffold(
         appBar: AppBar(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SomeButton(title: widget.title, cubit: photosCubit),
+        body:
             BlocListener<PhotosCubit, PhotosState>(listener: (context, state) {
-              if (state is SuccessState) {
-                // setState(() {});
-                print("set state called");
+          if (state is SuccessState) {
+            print("set state called");
 
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Scaffold()));
-              }
-            }, child: BlocBuilder<PhotosCubit, PhotosState>(
-              // bloc: photosCubit,
-              builder: (context, state) {
-                print(state);
+            // Navigator.of(context)
+            //     .push(MaterialPageRoute(builder: (_) => Scaffold()));
+          }
+        }, child: BlocBuilder<PhotosCubit, PhotosState>(
+          // bloc: photosCubit,
+          builder: (context, state) {
+            print(state);
 
-                if (state is LoadingState) return CircularProgressIndicator();
+            if (state is LoadingState) return Center(child: CircularProgressIndicator());
 
-                if (state is ErrorState) {
-                  return Text(state.errorMessage,
-                      style: TextStyle(color: Colors.red));
-                }
+            if (state is ErrorState) {
+              return Text(state.errorMessage,
+                  style: TextStyle(color: Colors.red));
+            }
 
-                if (state is SuccessState)
-                  return Text(state.data,
-                      style: TextStyle(color: Colors.green));
+            if (state is SuccessState) {
+              return PhotosListView(listData: state.data);
+            }
 
-                return MaterialButton(
-                  color: Colors.greenAccent,
-                  onPressed: () {
-                    // photosCubit.fetchPosts();
-                    context.read<PhotosCubit>().fetchPosts();
-                    // BlocProvider.of<PhotosCubit>(context).fetchPosts();
+            return MaterialButton(
+              color: Colors.greenAccent,
+              onPressed: () {
+                // photosCubit.fetchPosts();
+                context.read<PhotosCubit>().fetchPosts();
+                // BlocProvider.of<PhotosCubit>(context).fetchPosts();
 
-                    // Theme.of(context);
-                    // Navigator.of(context).push(route);
-                  },
-                  child: Text("Fetch data from server"),
-                );
+                // Theme.of(context);
+                // Navigator.of(context).push(route);
               },
-            ))
-          ],
-        ));
+              child: Text("Fetch data from server"),
+            );
+          },
+        )));
   }
 }
