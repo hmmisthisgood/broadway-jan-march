@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => PhotosCubit(),
       child: MaterialApp(
+        theme: ThemeData(primarySwatch: Colors.pink),
         home: HomepageWithCubit(
           title: "press me",
         ),

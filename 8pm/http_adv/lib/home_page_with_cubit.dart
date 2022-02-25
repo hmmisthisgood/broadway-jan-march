@@ -21,8 +21,12 @@ class _HomepageWithCubitState extends State<HomepageWithCubit> {
   /// streams
   // string
   // stream = continous flow
+  /// source , sink
 
-// source , sink
+  bool isLoadingMore = false;
+  bool enableLoadMore = true;
+
+  final searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,43 +38,98 @@ class _HomepageWithCubitState extends State<HomepageWithCubit> {
 
     return Scaffold(
         appBar: AppBar(),
-        body:
-            BlocListener<PhotosCubit, PhotosState>(listener: (context, state) {
-          if (state is SuccessState) {
-            print("set state called");
+        body: BlocListener<PhotosCubit, PhotosState>(
+            listener: (context, state) {
+              if (state is LoadingMoreState) {
+                isLoadingMore = true;
+                setState(() {});
+              }
 
-            // Navigator.of(context)
-            //     .push(MaterialPageRoute(builder: (_) => Scaffold()));
-          }
-        }, child: BlocBuilder<PhotosCubit, PhotosState>(
-          // bloc: photosCubit,
-          builder: (context, state) {
-            print(state);
+              if (state is SuccessState) {
+                print("set state called");
 
-            if (state is LoadingState) return Center(child: CircularProgressIndicator());
+                if (isLoadingMore == true) {
+                  isLoadingMore = false;
+                  setState(() {});
+                }
 
-            if (state is ErrorState) {
-              return Text(state.errorMessage,
-                  style: TextStyle(color: Colors.red));
-            }
+                // Navigator.of(context)
+                //     .push(MaterialPageRoute(builder: (_) => Scaffold()));
+              }
 
-            if (state is SuccessState) {
-              return PhotosListView(listData: state.data);
-            }
+              if (state is NoMoreData) {
+                enableLoadMore = false;
+                setState(() {});
+              }
+            },
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: searchController,
+                    textInputAction: TextInputAction.search,
+                    onFieldSubmitted: (value) {
+                      context
+                          .read<PhotosCubit>()
+                          .fetchPosts(searchController.text);
+                    },
+                    decoration: InputDecoration(
+                        hintText: "Search for photos",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(26),
+                        )),
+                  ),
+                ),
+                MaterialButton(
+                  color: Colors.greenAccent,
+                  onPressed: () {
+                    // photosCubit.fetchPosts();
+                    context
+                        .read<PhotosCubit>()
+                        .fetchPosts(searchController.text);
+                    // BlocProvider.of<PhotosCubit>(context).fetchPosts();
 
-            return MaterialButton(
-              color: Colors.greenAccent,
-              onPressed: () {
-                // photosCubit.fetchPosts();
-                context.read<PhotosCubit>().fetchPosts();
-                // BlocProvider.of<PhotosCubit>(context).fetchPosts();
+                    // Theme.of(context);
+                    // Navigator.of(context).push(route);
+                  },
+                  child: Text("Search"),
+                ),
+                BlocBuilder<PhotosCubit, PhotosState>(
+                  // bloc: photosCubit,
+                  builder: (context, state) {
+                    print(state);
 
-                // Theme.of(context);
-                // Navigator.of(context).push(route);
-              },
-              child: Text("Fetch data from server"),
-            );
-          },
-        )));
+                    if (state is LoadingState) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (state is ErrorState) {
+                      return Text(state.errorMessage,
+                          style: TextStyle(color: Colors.red));
+                    }
+
+                    if (state is SuccessState ||
+                        state is LoadingMoreState ||
+                        state is NoMoreData) {
+                      return Expanded(
+                          child: PhotosListView(
+                              listData: state.data,
+                              enableLoadMore: enableLoadMore));
+                    }
+                    return Container();
+                    // if (state is LoadingMoreState) {
+                    //   return Column(
+                    //     children: [
+                    //       Expanded(child: PhotosListView(listData: state.data)),
+                    //       CircularProgressIndicator()
+                    //     ],
+                    //   );
+                    // }
+                  },
+                ),
+                if (isLoadingMore) CircularProgressIndicator()
+              ],
+            )));
   }
 }

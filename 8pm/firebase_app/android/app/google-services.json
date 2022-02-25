@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "493522836654",
+    "project_id": "broadway-eight",
+    "storage_bucket": "broadway-eight.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493522836654:android:2caa55fc269f0f75f8213f",
+        "android_client_info": {
+          "package_name": "com.firebaseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "493522836654-uasgu2emb3je47l06ad0f12c6pa566vr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firebaseapp",
+            "certificate_hash": "5504b03ead586457e310dda6522eb8a792ee9b29"
+          }
+        },
+        {
+          "client_id": "493522836654-dirqa97dk3eq5q14idrfvb6ijq7aj4uu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPO_XMn4EkP2FljOT0XMUyGNr73n-mnfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "493522836654-dirqa97dk3eq5q14idrfvb6ijq7aj4uu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "493522836654-tl0sf846n3e6s45unc1k0mf94mrfug78.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sqlite.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

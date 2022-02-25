@@ -12,7 +12,7 @@ class SomeButton extends StatelessWidget {
     return MaterialButton(
       color: Colors.red,
       onPressed: () {
-        context.read<PhotosCubit>().fetchPosts();
+        // context.read<PhotosCubit>().fetchPosts();
         // cubit.fetchPosts();
       },
       child: TextWidget(

@@ -4,9 +4,11 @@ import 'package:http_adv/model/photo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PhotosListView extends StatefulWidget {
-  const PhotosListView({Key? key, required this.listData}) : super(key: key);
+  const PhotosListView(
+      {Key? key, required this.listData, required this.enableLoadMore})
+      : super(key: key);
   final List<Photo> listData;
-
+  final bool enableLoadMore;
   @override
   _PhotosListViewState createState() => _PhotosListViewState();
 }
@@ -28,10 +30,13 @@ class _PhotosListViewState extends State<PhotosListView> {
 
       // position.pixels;
 
-      print(position.pixels);
+      // print(position.pixels);
 
       if (position.pixels >= position.maxScrollExtent && isAtEdge) {
-        context.read<PhotosCubit>().loadMorePosts();
+        // i have reaced the end of screen
+        if (widget.enableLoadMore == true) {
+          context.read<PhotosCubit>().loadMorePosts();
+        }
 
         print(position.maxScrollExtent);
         print("I am at the end");
@@ -60,7 +65,7 @@ class _PhotosListViewState extends State<PhotosListView> {
               child: FadeInImage(
                 image: NetworkImage(currentPhoto.largeImageUrl),
                 placeholder: AssetImage('assets/images/placeholder.png'),
-                fadeInCurve: Curves.bounceIn,
+                fadeInCurve: Curves.ease,
                 fit: BoxFit.cover,
               ));
         });

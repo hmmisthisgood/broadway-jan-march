@@ -14,20 +14,36 @@ import 'package:logger/logger.dart';
 class PhotosCubit extends Cubit<PhotosState> {
   PhotosCubit() : super(InitialState());
 
-  final logger = Logger();
+  final _logger = Logger();
 
-  int currentPage = 1;
+  int _currentPage = 1;
 
-  List<Photo> allPhotos = [];
+  List<Photo> _allPhotos = [];
+
+  int _totalPhotos = 0;
+
+  String searchQuery = "";
+
   // return
 // from inside bloc/cubit functions, we [emit]
 
-  fetchPosts() async {
+  fetchPosts(String query) async {
     emit(LoadingState());
+
+    emit(LoadingState());
+    emit(LoadingState());
+    emit(LoadingState());
+    emit(LoadingState());
+    emit(LoadingState());
+
+    _currentPage = 1;
+    _allPhotos = [];
+
+    searchQuery = query;
 
     // logger.i("Fethinvg data from server");
     final url =
-        "https://pixabay.com/api/?key=${Constants.API_KEY}&q=cats&image_type=photo&per_page=5";
+        "https://pixabay.com/api/?key=${Constants.API_KEY}&q=$query&image_type=photo&per_page=3";
     // logger.i(url);
 
     final uri = Uri.parse(url);
@@ -39,11 +55,15 @@ class PhotosCubit extends Cubit<PhotosState> {
       final Map<String, dynamic> decodedJson = json.decode(body);
       List hits = decodedJson['hits'];
 
+      _totalPhotos = decodedJson['total'];
+
       final photosData = hits.map((item) {
         final convertedPhoto = Photo.convertMapToPhoto(item);
         return convertedPhoto;
       }).toList();
-      allPhotos.addAll(photosData);
+
+      _allPhotos.addAll(photosData);
+
       emit(SuccessState(data: photosData));
     } catch (e) {
       // logger.e(e);
@@ -54,13 +74,18 @@ class PhotosCubit extends Cubit<PhotosState> {
 
   loadMorePosts() async {
     print("loading more posts");
-    currentPage++;
+    _currentPage++;
 
-    emit(LoadingState());
+    if (_allPhotos.length >= _totalPhotos) {
+      emit(NoMoreData(data: _allPhotos));
+      return;
+    }
+
+    // emit(LoadingMoreState(data: _allPhotos));
 
     // logger.i("Fethinvg data from server");
     final url =
-        "https://pixabay.com/api/?key=${Constants.API_KEY}&q=cats&image_type=photo&page=$currentPage&per_page=5";
+        "https://pixabay.com/api/?key=${Constants.API_KEY}&q=$searchQuery&image_type=photo&page=$_currentPage&per_page=3";
 
     final uri = Uri.parse(url);
     try {
@@ -69,14 +94,15 @@ class PhotosCubit extends Cubit<PhotosState> {
 
       List newHits = decodedJson['hits'];
 
-      /// new 20 allPhotos
+      /// new 20 _allPhotos
       final loadedMorePhotos = newHits.map((item) {
         final convertedPhoto = Photo.convertMapToPhoto(item);
         return convertedPhoto;
       }).toList();
-      allPhotos.addAll(loadedMorePhotos);
 
-      emit(SuccessState(data: allPhotos));
+      _allPhotos.addAll(loadedMorePhotos);
+
+      emit(SuccessState(data: _allPhotos));
     } catch (e) {
       // logger.e(e);
 
