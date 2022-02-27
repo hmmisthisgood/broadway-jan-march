@@ -13,6 +13,7 @@ class RegisterCubit extends Cubit<AuthState> {
     try {
       final UserCredential userCred = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+          
       print(userCred.user.toString());
 
       emit(AuthSuccess());
